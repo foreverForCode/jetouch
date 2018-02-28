@@ -168,12 +168,13 @@
             } else if (that.effect == "curtain") {
                 that.conDOM.style.cssText = "width:" + conWidth * (1 - opts.clickSectionWidth * 2) + "px;" + "position:relative;overflow:hidden;padding:0;margin:0;transform:translateX(" + (-that.slideWidth * (1 - opts.clickSectionWidth * 3)) + "px)";
             }else if (that.effect == "movie") {
+                opts.clickSectionWidth = 0.1;
+                opts.imgSpacingDistant = 0;
                 that.conDOM.style.cssText = "width:" + conWidth * (1 - opts.clickSectionWidth * 2) + "px;" + "position:relative;overflow:hidden;padding:0;margin:0;transform:translateX(" + (-that.slideWidth * (1 - opts.clickSectionWidth * 3)) + "px)";
             }
             // 每屏的宽度
 
-            [].slice.call(that.conDOM.children, 0).forEach(function (node) {
-
+            [].slice.call(that.conDOM.children, 0).forEach(function (node,index) {
                 if (that.effect == "curtain") {
                     node.style.cssText = "display:block;float:left;width:" + that.slideWidth * (1 - opts.clickSectionWidth * 2 - opts.imgSpacingDistant * 2) + "px;";
                     node.style.marginLeft = that.slideWidth * (opts.imgSpacingDistant) + "px";
@@ -181,9 +182,15 @@
                 } else if (that.effect == "leftLoop") {
                     node.style.cssText = "display:block;float:left;width:" + that.slideWidth + "px";
                 }else if(that.effect == "movie"){
-                    node.style.cssText = "display:block;float:left;width:" + that.slideWidth * (1 - opts.clickSectionWidth * 2 - opts.imgSpacingDistant * 2) + "px;";
+                    if(index == 1){
+                        node.style.cssText = "transform: scaleY(1);display:block;float:left;width:" + that.slideWidth * (1 - opts.clickSectionWidth * 2 - opts.imgSpacingDistant * 2) + "px;";
+                    }else{
+                        node.style.cssText = "transform: scaleY(0.8);display:block;float:left;width:" + that.slideWidth * (1 - opts.clickSectionWidth * 2 - opts.imgSpacingDistant * 2) + "px;";
+                    }
+                    
                     node.style.marginLeft = that.slideWidth * (opts.imgSpacingDistant) + "px";
                     node.style.marginRight = that.slideWidth * (opts.imgSpacingDistant) + "px";
+                    
                 }
 
 
