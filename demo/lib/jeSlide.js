@@ -6,7 +6,8 @@
 
 /**
  * 优化记录：
- * 
+ * 1.实现右无限加载模式  
+ * 2.实现大幕模式
 */
 
 ; (function (window, factory) {
@@ -104,14 +105,14 @@
             navCell: '', // 导航节点
             pageCell: '', // 左右导航父节点
             prev: '', // 上一页《
-            next: '', // 下一页》
+            next: '', // 下一页 》
             curNavClassName: 'on', // 当前导航类名
             pageStateCell: '', // 1/2
             autoPlay: true, // 是否循环播放
             showNav: false, // 是否显示显示导航栏
             isTouch: false, // 是否可以拖动
             hasHandle: false, //是否需要左右导航,
-            effect: "leftLoop", // 默认右循环播放模式      两种模式：leftLoop curtain(大幕)
+            effect: "leftLoop", // 默认右循环播放模式      两种模式：leftLoop curtain(大幕) move(电影)
             index: 0, // 下标 
             timer: null, // 计时器
             duration: 3, // 间隔时间

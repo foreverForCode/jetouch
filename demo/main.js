@@ -24,7 +24,7 @@ $(function () {
 //      pageStateCell:".pageState",
         sLoad: "data-pic",
         isTouch:true,
-        showNav: true,//自动分页
+        showNav: false,//自动分页
         autoPlay: true  //自动播放
     });
 })
