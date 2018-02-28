@@ -6,8 +6,9 @@
 
 /**
  * 优化记录：
- * 1.实现右无限加载模式  
+ * 1.实现左右无限加载模式  
  * 2.实现大幕模式
+ * 3.实现movie模式
 */
 
 ; (function (window, factory) {
@@ -112,7 +113,7 @@
             showNav: false, // 是否显示显示导航栏
             isTouch: false, // 是否可以拖动
             hasHandle: false, //是否需要左右导航,
-            effect: "leftLoop", // 默认右循环播放模式      两种模式：leftLoop curtain(大幕) move(电影)
+            effect: "leftLoop", // 默认右循环播放模式      两种模式：leftLoop curtain(大幕) movie(电影)
             index: 0, // 下标 
             timer: null, // 计时器
             duration: 3, // 间隔时间
@@ -148,7 +149,7 @@
             that.touchMove = !Help.IsPC() ? 'touchmove' : '';
             that.touchEnd = !Help.IsPC() ? 'touchend' : '';
             that.isMove = false;
-            if (that.effect == 'leftLoop' || that.effect == 'curtain') {
+            if (that.effect == 'leftLoop' || that.effect == 'curtain'|| that.effect == 'movie') {
                 that.renderWrap();
             } else {
                 return false;
@@ -166,8 +167,11 @@
                 that.conDOM.style.cssText = "width:" + conWidth + "px;" + "position:relative;overflow:hidden;padding:0;margin:0;transform:translateX(" + (-that.slideWidth) + "px)";
             } else if (that.effect == "curtain") {
                 that.conDOM.style.cssText = "width:" + conWidth * (1 - opts.clickSectionWidth * 2) + "px;" + "position:relative;overflow:hidden;padding:0;margin:0;transform:translateX(" + (-that.slideWidth * (1 - opts.clickSectionWidth * 3)) + "px)";
+            }else if (that.effect == "movie") {
+                that.conDOM.style.cssText = "width:" + conWidth * (1 - opts.clickSectionWidth * 2) + "px;" + "position:relative;overflow:hidden;padding:0;margin:0;transform:translateX(" + (-that.slideWidth * (1 - opts.clickSectionWidth * 3)) + "px)";
             }
             // 每屏的宽度
+
             [].slice.call(that.conDOM.children, 0).forEach(function (node) {
 
                 if (that.effect == "curtain") {
@@ -176,6 +180,10 @@
                     node.style.marginRight = that.slideWidth * (opts.imgSpacingDistant) + "px";
                 } else if (that.effect == "leftLoop") {
                     node.style.cssText = "display:block;float:left;width:" + that.slideWidth + "px";
+                }else if(that.effect == "movie"){
+                    node.style.cssText = "display:block;float:left;width:" + that.slideWidth * (1 - opts.clickSectionWidth * 2 - opts.imgSpacingDistant * 2) + "px;";
+                    node.style.marginLeft = that.slideWidth * (opts.imgSpacingDistant) + "px";
+                    node.style.marginRight = that.slideWidth * (opts.imgSpacingDistant) + "px";
                 }
 
 
@@ -205,7 +213,7 @@
         renderWrap: function () {
             var that = this,
                 opts = that.opts;
-            if (that.effect == "leftLoop" || that.effect == "curtain") {
+            if (that.effect == "leftLoop" || that.effect == "curtain"||that.effect=="movie") {
                 that.conDOMLens += 2;
                 that.conDOM.appendChild(that.conDOM.children[0].cloneNode(true));
                 that.conDOM.insertBefore(that.conDOM.children[that.conDOMLens - 3].cloneNode(true), that.conDOM.children[0]);
@@ -291,12 +299,16 @@
                     Help.setTranslateX(context.conDOM, -(context.index - 1) * context.slideWidth * (1 - opts.clickSectionWidth * 2) - context.slideWidth * (1 - opts.clickSectionWidth * 3));
                 } else if (context.effect == "leftLoop") {
                     Help.setTranslateX(context.conDOM, -context.index * context.slideWidth);
+                } else if(context.effect == "movie"){
+                    Help.setTranslateX(context.conDOM, -(context.index - 1) * context.slideWidth * (1 - opts.clickSectionWidth * 2) - context.slideWidth * (1 - opts.clickSectionWidth * 3));
                 }
             } else if (status == 'move') {
                 if (that.effect == "curtain") {
                     Help.setTranslateX(that.conDOM, -(that.index - 1) * that.slideWidth * (1 - opts.clickSectionWidth * 2) - that.slideWidth * (1 - opts.clickSectionWidth * 3) + that.distanceX);
                 } else if (context.effect == "leftLoop") {
                     Help.setTranslateX(that.conDOM, -that.index * that.slideWidth + that.distanceX); //实时的定位
+                } else if(that.effect == "movie"){
+                    Help.setTranslateX(that.conDOM, -(that.index - 1) * that.slideWidth * (1 - opts.clickSectionWidth * 2) - that.slideWidth * (1 - opts.clickSectionWidth * 3) + that.distanceX);
                 }
             }
         },
@@ -323,8 +335,7 @@
                 }, context.opts.duration * 1000);
             };
             Help.transitionEnd(context.conDOM, function () {
-                if (opts.effect == 'curtain' || opts.effect == 'leftLoop') {
-                    console.log(context.conDOMLens);
+                if (opts.effect == 'curtain' || opts.effect == 'leftLoop'||opts.effect == 'movie') {
                     if (context.index > context.conDOMLens - 2) {
                         context.index = 1
                     } else if (context.index <= 0) {
@@ -351,7 +362,7 @@
             }, opts.duration * 1000);
             Help.transitionEnd(that.conDOM, function () {
                 var me = that;
-                if (me.effect == "leftLoop" || that.effect == "curtain") {
+                if (me.effect == "leftLoop" || that.effect == "curtain" || that.effect == "movie") {
                     if (me.index > me.conDOMLens - 2) {
                         me.index = 1
                     } else if (me.index <= 0) {
@@ -382,7 +393,7 @@
             var that = this,
                 opts = that.opts;
             if (that.pageStateDOM) {
-                if (opts.effect == "leftLoop" || opts.effect == "curtain") {
+                if (opts.effect == "leftLoop" || opts.effect == "curtain"||opts.effect == "movie") {
                     if (!opts.pageStateHTML) {
                         that.pageStateDOM.innerHTML = "<span>" + (that.index) + "/" + (that.conDOMLens - 2) + "</span>"
                     } else {

@@ -19,12 +19,12 @@ $(function () {
         mainCell: "#findslider",
         navCell: ".hd ul",
         conCell: ".bd ul",
-        effect: "curtain",
+        effect: "movie",
         duration: 4,
 //      pageStateCell:".pageState",
         sLoad: "data-pic",
         isTouch:true,
         showNav: false,//自动分页
-        autoPlay: true  //自动播放
+        autoPlay: false  //自动播放
     });
 })
