@@ -168,8 +168,9 @@
             } else if (that.effect == "curtain") {
                 that.conDOM.style.cssText = "width:" + conWidth * (1 - opts.clickSectionWidth * 2) + "px;" + "position:relative;overflow:hidden;padding:0;margin:0;transform:translateX(" + (-that.slideWidth * (1 - opts.clickSectionWidth * 3)) + "px)";
             }else if (that.effect == "movie") {
+                // 这里对左右显示区域进行定制
                 opts.clickSectionWidth = 0.1;
-                opts.imgSpacingDistant = 0;
+               
                 that.conDOM.style.cssText = "width:" + conWidth * (1 - opts.clickSectionWidth * 2) + "px;" + "position:relative;overflow:hidden;padding:0;margin:0;transform:translateX(" + (-that.slideWidth * (1 - opts.clickSectionWidth * 3)) + "px)";
             }
             // 每屏的宽度
@@ -182,18 +183,14 @@
                 } else if (that.effect == "leftLoop") {
                     node.style.cssText = "display:block;float:left;width:" + that.slideWidth + "px";
                 }else if(that.effect == "movie"){
+                    node.classList.add('swipe-slide');
                     if(index == 1){
-                        node.style.cssText = "transform: scaleY(1);display:block;float:left;width:" + that.slideWidth * (1 - opts.clickSectionWidth * 2 - opts.imgSpacingDistant * 2) + "px;";
-                    }else{
-                        node.style.cssText = "transform: scaleY(0.8);display:block;float:left;width:" + that.slideWidth * (1 - opts.clickSectionWidth * 2 - opts.imgSpacingDistant * 2) + "px;";
-                    }
-                    
+                        node.classList.add('swipe-slide-active');
+                    };
+                    node.style.cssText = "display:block;float:left;width:" + that.slideWidth * (1 - opts.clickSectionWidth * 2 - opts.imgSpacingDistant * 2) + "px;";
                     node.style.marginLeft = that.slideWidth * (opts.imgSpacingDistant) + "px";
-                    node.style.marginRight = that.slideWidth * (opts.imgSpacingDistant) + "px";
-                    
+                    node.style.marginRight = that.slideWidth * (opts.imgSpacingDistant) + "px";   
                 }
-
-
             });
         },
         // 导航区判断是否需要加载，如果没有是否可以自动生成
@@ -442,10 +439,35 @@
                 default:
                     break;
             };
+
+            if(that.opts.effect == "movie"){
+                var currentIndex = that.index;
+
+                
+                if(currentIndex >= that.conDOM.children.length-1){
+                    currentIndex = 1;
+                };
+                console.log(currentIndex);
+                that.animateCurrentSlide(currentIndex)
+                
+            }
+ 
+
+
             that.imgLazy();
             Help.addTransition(that.conDOM, opts.speed);
             that.moveDistance(that);
             that.resetInterval(that);
+        },
+        // 对当前主屏进行动画处理
+        animateCurrentSlide:function(currentIndex){
+            var that = this;
+            
+            [].slice.call(that.conDOM.children,0).forEach(function(node,index){            
+                    node.classList.remove('swipe-slide-active')        
+            });
+            that.conDOM.children[currentIndex].classList.add('swipe-slide-active');
+
         },
         // 上一页 和 下一页
         pageNav: function () {

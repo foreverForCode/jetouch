@@ -1,0 +1,8 @@
+.swipe-slide{
+    transition: transform 0.5s;
+    transform: scaleY(0.8);
+}
+
+.swipe-slide-active{
+    transform: scaleY(1)
+}
